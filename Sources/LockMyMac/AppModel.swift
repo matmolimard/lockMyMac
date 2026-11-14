@@ -89,7 +89,10 @@ final class AppModel: ObservableObject {
     private var napToken: NSObjectProtocol?
     private var enroller = Enroller()
     // Mode périodique
-    static let missesBeforeLock = 2
+    /// Après une vérification manquée, on revérifie à intervalle court avant de verrouiller.
+    static let recheckInterval: TimeInterval = 20
+    static let rechecksBeforeLock = 3
+    static let missesBeforeLock = 1 + rechecksBeforeLock
     private var periodic: Bool { checkInterval > 0 && !testMode }
     private var burstActive = false
     private var burstStart: TimeInterval = 0
@@ -376,8 +379,9 @@ final class AppModel: ObservableObject {
                 if misses >= Self.missesBeforeLock {
                     performLock()
                 } else {
-                    nextCheckAt = t + checkInterval
-                    setState(.absent(secondsLeft: Int(checkInterval)))
+                    // Revérifications rapprochées, calées sur le début de la vérification précédente.
+                    nextCheckAt = max(t, burstStart + min(Self.recheckInterval, checkInterval))
+                    setState(.absent(secondsLeft: max(0, Int((nextCheckAt - t).rounded(.up)))))
                 }
             } else if t - burstStart > 6 {
                 cameraFailed("La caméra ne fournit pas d'image (utilisée ailleurs, capot fermé ou débranchée ?).")
@@ -386,7 +390,7 @@ final class AppModel: ObservableObject {
         }
         if let problem = cameraProblem {
             setState(.cameraUnavailable(problem))
-            if lockOnCameraFailure, t - cameraProblemSince >= checkInterval * Double(Self.missesBeforeLock) {
+            if lockOnCameraFailure, t - cameraProblemSince >= checkInterval + Self.recheckInterval * Double(Self.rechecksBeforeLock) {
                 return performLock()
             }
         } else if misses > 0 {
@@ -583,7 +587,9 @@ final class AppModel: ObservableObject {
         case .recognized: base = periodic ? "Visage reconnu à la dernière vérification" : "Visage reconnu"
         case .absent(let s):
             base = testLockFired ? "Absence — verrouillage simulé"
-                : periodic ? "Non reconnu — nouvelle vérification dans \(s) s, puis verrouillage"
+                : periodic ? (misses >= Self.missesBeforeLock - 1
+                              ? "Non reconnu — dernière vérification dans \(s) s, puis verrouillage"
+                              : "Non reconnu — nouvelle vérification dans \(s) s (encore \(Self.missesBeforeLock - misses) avant verrouillage)")
                 : "Absence en cours — verrouillage dans \(s) s"
         case .cameraUnavailable: base = "Caméra indisponible — protection interrompue"
         case .sessionLocked: base = "Session verrouillée ou écran en veille"
