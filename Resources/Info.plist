@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CFBundleName</key><string>lockMyMac</string>
+	<key>CFBundleDisplayName</key><string>lockMyMac</string>
+	<key>CFBundleIdentifier</key><string>app.lockmymac.LockMyMac</string>
+	<key>CFBundleExecutable</key><string>lockMyMac</string>
+	<key>CFBundlePackageType</key><string>APPL</string>
+	<key>CFBundleShortVersionString</key><string>1.0.0</string>
+	<key>CFBundleVersion</key><string>1</string>
+	<key>CFBundleDevelopmentRegion</key><string>fr</string>
+	<key>LSMinimumSystemVersion</key><string>14.0</string>
+	<key>LSUIElement</key><true/>
+	<key>NSHighResolutionCapable</key><true/>
+	<key>NSCameraUsageDescription</key><string>lockMyMac vérifie que votre visage est devant l'écran pour verrouiller la session quand vous partez. Les images sont analysées sur ce Mac et ne sont ni enregistrées ni envoyées.</string>
+	<key>NSLocationUsageDescription</key><string>lockMyMac lit uniquement le nom du réseau Wi-Fi, pour suspendre la surveillance sur les réseaux que vous avez choisis (chez vous). Votre position n'est ni lue ni enregistrée.</string>
+	<key>NSLocationWhenInUseUsageDescription</key><string>lockMyMac lit uniquement le nom du réseau Wi-Fi, pour suspendre la surveillance sur les réseaux que vous avez choisis (chez vous). Votre position n'est ni lue ni enregistrée.</string>
+	<key>NSCameraUseContinuityCameraDeviceType</key><true/>
+	<key>NSHumanReadableCopyright</key><string>Licence MIT</string>
+</dict>
+</plist>
