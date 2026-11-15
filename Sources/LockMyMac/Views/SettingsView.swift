@@ -20,7 +20,7 @@ struct SettingsView: View {
                     Text("Toutes les 5 minutes").tag(300.0)
                 }
                 Text(model.checkInterval > 0
-                     ? "La caméra s'allume quelques secondes à chaque vérification. Deux vérifications de suite sans vous reconnaître verrouillent la session : entre \(Int(model.checkInterval)) et \(Int(model.checkInterval * 2)) secondes après votre départ. Le délai ci-dessous ne sert qu'en mode continu et en mode test."
+                     ? "La caméra s'allume quelques secondes à chaque vérification. Si vous n'êtes pas reconnu, elle revérifie toutes les 20 secondes ; après 3 nouvelles vérifications sans vous, la session se verrouille, soit environ 1 minute après la première vérification manquée. Le délai ci-dessous ne sert qu'en mode continu et en mode test."
                      : "La caméra reste allumée et la session se verrouille après le délai ci-dessous sans vous reconnaître.")
                     .font(.caption).foregroundStyle(.secondary)
                 LabeledContent("Délai avant verrouillage") {
